@@ -1,5 +1,4 @@
 import os
-import matplotlib
 import numpy as np
 import torch.utils.data as dt
 import matplotlib.pyplot as plt
@@ -8,7 +7,9 @@ import constants as cst
 import modules.database as database
 import modules.neuralnetwork as neuralnetwork
 
-matplotlib.use("Qt5Agg")
+# import matplotlib
+# matplotlib.use("Qt5Agg") # to use interative backend, needs PyQt5 library
+
 plt.style.use("ggplot")
 
 
