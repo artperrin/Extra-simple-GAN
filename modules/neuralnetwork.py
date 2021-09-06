@@ -2,6 +2,7 @@ import torch
 import logging as lg
 from torch import nn
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from torch.nn.modules.loss import BCEWithLogitsLoss
 
 
@@ -14,6 +15,7 @@ class Generator(nn.Module):
         output_size: int,
         hidden_sizes: list = [16, 16],
         relu_slope: float = 0.01,
+        dropout: float = .2
     ):
         """__init__ initialize the generator network
 
@@ -27,10 +29,12 @@ class Generator(nn.Module):
             sizes of the feature maps used in the hidden layers, by default [16, 16] = 2 hidden layers
         relu_slope : float, optional
             negative slope for all the leaky ReLu activations, by default 0.01
+        dropout : float, optional
+            dropout parameter, by default 0.2
         """
         super(Generator, self).__init__()
         self.input_size = input_size  # save the input size
-        self.dropout = nn.Dropout(p=0.25)  # dropout layer
+        self.dropout = nn.Dropout(p=dropout)  # dropout layer
         dense_layers = []  # list of nn.Modules to be used
         for h in hidden_sizes:  # build the list given the different hidden layers sizes
             dense = nn.Linear(in_features=input_size, out_features=h)
@@ -224,7 +228,6 @@ def write_test_graph(generator, noise_bench, title: str = None, overlay=None):
         else:
             plt.savefig(title)
 
-
 def train_gan(
     dataloader,
     generator,
@@ -234,6 +237,7 @@ def train_gan(
     write_graph: bool = False,
     n_test_graph: int = 200,
     display_test: bool = False,
+    live_plot: bool = False,
 ):
     """train_gan trains the GAN
 
@@ -255,10 +259,15 @@ def train_gan(
         number of items to be generated during testing, by default 200
     display_test : bool, optional
         whether to plot and save a generated 'fake' dataset on top of the 'real' training dataset, by default False
+    live_plot : bool, optional
+        whether to plot the losses as training goes, by default False 
     """
     dloss, gloss = [], []
     gen_input_size = generator.input_size
     noise_bench = torch.randn([n_test_graph, gen_input_size])
+    if live_plot:
+        _, ax = plt.subplots(1, 1)
+        ax.set_xlim(left=0, right=epochs)
     try:
         lg.info("Beginning training...")
         for t in range(epochs):
@@ -274,6 +283,12 @@ def train_gan(
                 if epochs <= 10 or t % (epochs // 10):
                     title = f"./output/epoch_{t}.png"
                     write_test_graph(generator, noise_bench, title)
+            if live_plot:
+                ax.clear()
+                ax.plot(dloss, color='r', label='discriminator')
+                ax.plot(gloss, color='b', label='generator')
+                ax.legend()
+                plt.pause(.01)
             if g < 0.0001 or d < 0.0001 or abs(d - g) < 0.001:
                 print("")
                 lg.info(f"Training stopped after epoch {t+1}...")
@@ -286,6 +301,9 @@ def train_gan(
     except KeyboardInterrupt:
         print("")
         lg.warning(f"Training interrupted at epoch {t}!")
+
+    if live_plot:
+        plt.show()
 
     lg.info("Plotting training info...")
     plt.figure()

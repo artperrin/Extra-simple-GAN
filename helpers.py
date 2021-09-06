@@ -7,8 +7,8 @@ import constants as cst
 import modules.database as database
 import modules.neuralnetwork as neuralnetwork
 
-# import matplotlib
-# matplotlib.use("Qt5Agg") # to use interative backend, needs PyQt5 library
+import matplotlib
+matplotlib.use("Qt5Agg") # to use interative backend, needs PyQt5 library
 
 plt.style.use("ggplot")
 
@@ -75,7 +75,7 @@ def plot_data(data: list):
 
 def main():
     """main creates the output directory, a dataset and trains the GAN to generate realistic fake data"""
-    if os.path.isdir("output"):
+    if not os.path.isdir("output"):
         os.mkdir("output")
     POLY = cst.POLY
     gen = get_polynomial_function(POLY)
@@ -83,9 +83,10 @@ def main():
     dataset = dt.DataLoader(database.Samples(sampler), batch_size=128)
     neuralnetwork.train_gan(
         dataset,
-        neuralnetwork.Generator(2, 2),
+        neuralnetwork.Generator(2, 2, dropout=.1),
         neuralnetwork.Discriminator(2, 2),
-        epochs=100001,
+        epochs=cst.NUM_EPOCHS,
         lr=cst.LEARNING_RATE,
         display_test=True,
+        live_plot=True,
     )
