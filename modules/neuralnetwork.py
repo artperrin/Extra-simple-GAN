@@ -288,8 +288,9 @@ def train_gan(
                 ax.plot(dloss, color='r', label='discriminator')
                 ax.plot(gloss, color='b', label='generator')
                 ax.legend(loc='upper right')
-                # plt.pause(.01)
-                plt.savefig(f'gif_material/epoch_{t}.png')
+                ax.set_xlabel('Epoch')
+                ax.set_ylabel('Losses')
+                plt.pause(.01)
             if g < 0.0001 or d < 0.0001:
                 print("")
                 lg.info(f"Training stopped after epoch {t+1}...")
