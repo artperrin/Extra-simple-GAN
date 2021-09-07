@@ -43,5 +43,11 @@ In addition, after lr=1e-3, we see that the losses are quite unstable (even if t
 * learning rate = 1e-2:
 ![lr1e-2epochs1000](./study_assets/lr1e-2_epochs1000_1.PNG)
 
+After 1e-2, the generator seems to become highly unstable, resulting in really bad approximations very easily discarded by the discriminator, whose very low loss interrupts the training before 1000 epochs:
 
-
+* learning rate = 5e-2, first try:
+![lr5e-2epochs1000](./study_assets/lr5e-2_epochs1000_1.PNG)
+* learning rate = 5e-2, second try:
+![lr5e-2epochs1000](./study_assets/lr5e-2_epochs1000_2.PNG)
+* learning rate = 5e-2, third try:
+![lr5e-2epochs1000](./study_assets/lr5e-2_epochs1000_3.PNG)
