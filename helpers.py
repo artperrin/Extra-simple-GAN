@@ -83,7 +83,7 @@ def main():
     dataset = dt.DataLoader(database.Samples(sampler), batch_size=512)
     neuralnetwork.train_gan(
         dataset,
-        neuralnetwork.Generator(2, 2, dropout=.5, hidden_sizes=[32, 32, 16]),
+        neuralnetwork.Generator(2, 2, dropout=.25, hidden_sizes=[32, 32, 16]),
         neuralnetwork.Discriminator(2, 2, hidden_sizes=[16, 16]),
         epochs=cst.NUM_EPOCHS,
         lr=cst.LEARNING_RATE,
