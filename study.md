@@ -11,7 +11,7 @@ Here we don't modify the models :
 | Generator | [32, 32, 16] | p=0.5 |
 | Discriminator | [16, 16] | . |
 
-Generator takes a 2D-latent vector as input and the discriminator's features are 2D vector. The batch size is 512.
+Generator takes a 2D-latent vector as input and the discriminator's features are 2D vectors. The batch size is 512.
 
 We know that higher learning rates allows the GAN to approximate the aiming distribution faster, and it seems to do a great jobs below lr=1e-2.
 
@@ -46,13 +46,13 @@ Here we don't modify these models' parameters :
 | Generator | [32, 32, 16] |
 | Discriminator | [16, 16] |
 
-Generator takes a 2D-latent vector as input and the discriminator's features are 2D vector. The batch size is 512, learning rate is 5e-4, epochs number 1000.
+Generator takes a 2D-latent vector as input and the discriminator's features are 2D vectors. The batch size is 512, learning rate is 5e-4, epochs number 1000.
 
-This dropout is applied only for the generator, on the visible layer.
+This dropout is applied to the generator only, on the visible layer.
 
 ### Dropout p=0.5
 
-We see that the model is quite robust:
+We see that the model is quite robust but the approximation is somewhat clumsy:
 
 * first try:
 ![p.5_1](./study_assets/lr5e-4_epochs1000_1.PNG)
@@ -63,7 +63,7 @@ We see that the model is quite robust:
 
 ### Dropout p=0.75
 
-The model is less robust but still performs well:
+The model is less robust but performs fairly:
 
 * first try:
 ![p.75_1](./study_assets/p75_1.PNG)
@@ -74,7 +74,7 @@ The model is less robust but still performs well:
 
 ### Dropout p=0.25
 
-It seems like the model converges to a quite stable state and performs a great approximation of the distribution:
+It seems like the model converges to a quite stable state and performs a great approximation of the distribution (especially in the last try):
 
 * first try:
 ![p.25_1](./study_assets/p25_1.PNG)
