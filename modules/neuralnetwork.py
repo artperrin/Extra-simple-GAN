@@ -219,14 +219,23 @@ def write_test_graph(generator, noise_bench, title: str = None, overlay=None):
     """
     with torch.no_grad():
         preds = generator(noise_bench).numpy()
+    
+    if len(preds[0]) == 2: # dim 2
         plt.figure()
         plt.scatter(preds[:, 0], preds[:, 1], color="red", marker="+")
         if overlay:
-            plt.scatter(overlay[0], overlay[1], color="blue", marker=".", alpha=0.5)
-        if not title:
-            plt.savefig(f"output.png")
-        else:
-            plt.savefig(title)
+            plt.scatter(overlay[0], overlay[1], color="blue", marker=".", alpha=0.1, lw=0)
+    elif len(preds[0]) == 3: # dim 3
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='3d')
+        ax.scatter(preds[:, 0], preds[:, 1], preds[:, 2], color="red", marker="+")
+        if overlay:
+            ax.scatter(overlay[0], overlay[1], overlay[2], color="blue", marker=".", alpha=0.5, lw=0)
+    if not title:
+        plt.savefig(f"output.png")
+    else:
+        plt.savefig(title)
+    plt.show()
 
 def train_gan(
     dataloader,
@@ -322,5 +331,5 @@ def train_gan(
             generator,
             noise_bench,
             title="./output/display_test_set.png",
-            overlay=(data[:, 0], data[:, 1]),
+            overlay=(data[:, 0], data[:, 1], data[:, 2]),
         )
