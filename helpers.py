@@ -88,5 +88,4 @@ def main():
         epochs=cst.NUM_EPOCHS,
         lr=cst.LEARNING_RATE,
         display_test=True,
-        live_plot=True,
     )
