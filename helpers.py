@@ -79,12 +79,12 @@ def main():
         os.mkdir("output")
     POLY = cst.POLY
     gen = get_polynomial_function(POLY)
-    sampler = sample_data(1000, gen, scale=1)
-    dataset = dt.DataLoader(database.Samples(sampler), batch_size=128)
+    sampler = sample_data(10000, gen, scale=10)
+    dataset = dt.DataLoader(database.Samples(sampler), batch_size=512)
     neuralnetwork.train_gan(
         dataset,
-        neuralnetwork.Generator(2, 2, dropout=.1),
-        neuralnetwork.Discriminator(2, 2),
+        neuralnetwork.Generator(2, 2, dropout=.5, hidden_sizes=[32, 32, 16]),
+        neuralnetwork.Discriminator(2, 2, hidden_sizes=[16, 16]),
         epochs=cst.NUM_EPOCHS,
         lr=cst.LEARNING_RATE,
         display_test=True,

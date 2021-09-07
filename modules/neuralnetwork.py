@@ -266,7 +266,7 @@ def train_gan(
     gen_input_size = generator.input_size
     noise_bench = torch.randn([n_test_graph, gen_input_size])
     if live_plot:
-        _, ax = plt.subplots(1, 1)
+        _, ax = plt.subplots(1, 1, figsize=(10, 5))
         ax.set_xlim(left=0, right=epochs)
     try:
         lg.info("Beginning training...")
@@ -287,9 +287,10 @@ def train_gan(
                 ax.clear()
                 ax.plot(dloss, color='r', label='discriminator')
                 ax.plot(gloss, color='b', label='generator')
-                ax.legend()
-                plt.pause(.01)
-            if g < 0.0001 or d < 0.0001 or abs(d - g) < 0.001:
+                ax.legend(loc='upper right')
+                # plt.pause(.01)
+                plt.savefig(f'gif_material/epoch_{t}.png')
+            if g < 0.0001 or d < 0.0001:
                 print("")
                 lg.info(f"Training stopped after epoch {t+1}...")
                 if write_graph:
@@ -301,9 +302,6 @@ def train_gan(
     except KeyboardInterrupt:
         print("")
         lg.warning(f"Training interrupted at epoch {t}!")
-
-    if live_plot:
-        plt.show()
 
     lg.info("Plotting training info...")
     plt.figure()
