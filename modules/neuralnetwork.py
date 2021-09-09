@@ -15,7 +15,7 @@ class Generator(nn.Module):
         output_size: int,
         hidden_sizes: list = [16, 16],
         relu_slope: float = 0.01,
-        dropout: float = .2
+        dropout: float = 0.2,
     ):
         """__init__ initialize the generator network
 
@@ -219,23 +219,34 @@ def write_test_graph(generator, noise_bench, title: str = None, overlay=None):
     """
     with torch.no_grad():
         preds = generator(noise_bench).numpy()
-    
-    if len(preds[0]) == 2: # dim 2
+
+    if len(preds[0]) == 2:  # dim 2
         plt.figure()
         plt.scatter(preds[:, 0], preds[:, 1], color="red", marker="+")
         if overlay:
-            plt.scatter(overlay[0], overlay[1], color="blue", marker=".", alpha=0.1, lw=0)
-    elif len(preds[0]) == 3: # dim 3
+            plt.scatter(
+                overlay[0], overlay[1], color="blue", marker=".", alpha=0.1, lw=0
+            )
+    elif len(preds[0]) == 3:  # dim 3
         fig = plt.figure()
-        ax = fig.add_subplot(projection='3d')
+        ax = fig.add_subplot(projection="3d")
         ax.scatter(preds[:, 0], preds[:, 1], preds[:, 2], color="red", marker="+")
         if overlay:
-            ax.scatter(overlay[0], overlay[1], overlay[2], color="blue", marker=".", alpha=0.5, lw=0)
+            ax.scatter(
+                overlay[0],
+                overlay[1],
+                overlay[2],
+                color="blue",
+                marker=".",
+                alpha=0.5,
+                lw=0,
+            )
     if not title:
         plt.savefig(f"output.png")
     else:
         plt.savefig(title)
-    plt.show()
+    # plt.show()
+
 
 def train_gan(
     dataloader,
@@ -269,7 +280,7 @@ def train_gan(
     display_test : bool, optional
         whether to plot and save a generated 'fake' dataset on top of the 'real' training dataset, by default False
     live_plot : bool, optional
-        whether to plot the losses as training goes, by default False 
+        whether to plot the losses as training goes, by default False
     """
     dloss, gloss = [], []
     gen_input_size = generator.input_size
@@ -294,12 +305,12 @@ def train_gan(
                     write_test_graph(generator, noise_bench, title)
             if live_plot:
                 ax.clear()
-                ax.plot(dloss, color='r', label='discriminator')
-                ax.plot(gloss, color='b', label='generator')
-                ax.legend(loc='upper right')
-                ax.set_xlabel('Epoch')
-                ax.set_ylabel('Losses')
-                plt.pause(.01)
+                ax.plot(dloss, color="r", label="discriminator")
+                ax.plot(gloss, color="b", label="generator")
+                ax.legend(loc="upper right")
+                ax.set_xlabel("Epoch")
+                ax.set_ylabel("Losses")
+                plt.pause(0.01)
             if g < 0.0001 or d < 0.0001:
                 print("")
                 lg.info(f"Training stopped after epoch {t+1}...")
